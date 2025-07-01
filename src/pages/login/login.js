@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -47,7 +48,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+            <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
                 {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -92,11 +93,12 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                        className="w-full bg-cyan-900 text-white py-2 rounded hover:bg-cyan-700"
                     >
                         Login
                     </button>
                 </form>
+                <p className='text-center mt-3 text-[15px] font-bold'>Dont have an account? <Link href='/login/signup'><span className='text-blue-700 underline'>Signup</span></Link></p>
             </div>
         </div>
     );
