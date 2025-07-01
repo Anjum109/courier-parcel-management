@@ -85,11 +85,14 @@ export default function AdminDashboard() {
                 {/* Content Area */}
                 <div className="lg:w-[80%] bg-white p-6">
                     {activeTab === 'dashboard' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Metrics />
-                            <Reports />
+                        <div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Metrics />
+                                <Reports />
+
+
+                            </div>
                             <AllParcel />
-                            <UserManagement />
                         </div>
                     )}
 

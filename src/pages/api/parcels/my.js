@@ -1,5 +1,3 @@
-// /pages/api/parcels/my.js
-
 import { connectDB } from "@/lib/mongodb";
 import Parcel from "@/models/Parcel";
 import jwt from "jsonwebtoken";
@@ -19,11 +17,19 @@ export default async function handler(req, res) {
 
         if (!user) return res.status(401).json({ message: "Unauthorized" });
 
-        const parcels = await Parcel.find({ customer: user._id }).sort({ createdAt: -1 });
+        let parcels;
+
+        if (user.role === "admin") {
+            // Admin: fetch all parcels
+            parcels = await Parcel.find().sort({ createdAt: -1 });
+        } else {
+            // Customer: fetch their own
+            parcels = await Parcel.find({ customer: user._id }).sort({ createdAt: -1 });
+        }
 
         res.status(200).json(parcels);
     } catch (err) {
-        console.error("Fetch Bookings Error:", err);
+        console.error("Fetch Parcels Error:", err);
         res.status(500).json({ message: "Server error" });
     }
 }

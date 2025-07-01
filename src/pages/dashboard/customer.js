@@ -60,22 +60,22 @@ export default function customer() {
                             Booking History
                         </li>
                         <li
-                            onClick={() => setActiveTab("myParcels")}
-                            className={`border-white border-2 p-2 cursor-pointer ${activeTab === "myParcels"
+                            onClick={() => setActiveTab("parcelTracking")}
+                            className={`border-white border-2 p-2 cursor-pointer ${activeTab === "parcelTracking"
                                 ? "bg-gray-200 text-gray-700 font-bold"
                                 : ""
                                 }`}
                         >
-                            Parcel Booking
+                            Parcel Tracking
                         </li>
                         <li
-                            onClick={() => setActiveTab("profile")}
-                            className={`border-white border-2 p-2 cursor-pointer ${activeTab === "profile"
+                            onClick={() => setActiveTab("agent")}
+                            className={`border-white border-2 p-2 cursor-pointer ${activeTab === "agent"
                                 ? "bg-gray-200 text-gray-700 font-bold"
                                 : ""
                                 }`}
                         >
-                            Profile Settings
+                            Agent
                         </li>
                     </ul>
                 </div>
