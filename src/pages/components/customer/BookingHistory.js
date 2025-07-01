@@ -8,21 +8,14 @@ export default function BookingHistory() {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                // Get token from localStorage or wherever you store it
-                const token = localStorage.getItem('token');
-
-                const res = await fetch('/api/bookings/my', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                const res = await fetch('/api/parcels/my', {
+                    credentials: 'include',
                 });
 
-                if (!res.ok) {
-                    throw new Error('Failed to fetch booking history');
-                }
+                if (!res.ok) throw new Error('Failed to fetch booking history');
 
                 const data = await res.json();
-                setBookings(data.bookings);
+                setBookings(data || []);
             } catch (err) {
                 setError(err.message);
             } finally {

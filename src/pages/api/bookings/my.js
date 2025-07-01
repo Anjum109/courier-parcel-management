@@ -1,43 +1,41 @@
 // pages/api/bookings/my.js
-import jwt from 'jsonwebtoken';
-import dbConnect from '../../../lib/mongodb';
-import Bookings from '@/models/Bookings';
+import jwt from "jsonwebtoken";
+
+import cookie from "cookie";
+import { connectDB } from "@/lib/mongodb";
+import Parcel from "@/models/Parcel";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
-    if (req.method !== 'GET') {
-        return res.status(405).json({ message: 'Method not allowed' });
+    if (req.method !== "GET") {
+        return res.status(405).json({ message: "Method not allowed" });
     }
 
     try {
-        await dbConnect();
+        await connectDB();
 
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: 'No token provided' });
-        }
+        // Get cookies safely
+        const cookies = cookie.parse(req.headers.cookie || "");
+        const token = cookies.token;
 
-        const token = authHeader.split(' ')[1];
         if (!token) {
-            return res.status(401).json({ message: 'No token provided' });
+            return res.status(401).json({ message: "No token provided" });
         }
 
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
+        // Verify token
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const userId = decoded.userId;
 
-        const userEmail = decoded.email;
+        // Fetch parcels
+        const parcels = await Parcel.find({ customer: userId }).sort({ createdAt: -1 });
 
-        const bookings = await Bookings.find({ userEmail }).sort({ createdAt: -1 });
+        // Log for debugging
+        console.log("Fetched parcels:", parcels);
 
-        return res.status(200).json({ bookings });
+        return res.status(200).json({ bookings: parcels });
     } catch (error) {
-        console.error('API error:', error); // log stack trace
-        return res.status(500).json({ message: 'Server error' });
+        console.error("API error:", error);
+        return res.status(500).json({ message: "Server error" });
     }
-
 }
