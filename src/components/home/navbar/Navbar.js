@@ -34,10 +34,11 @@ export default function Navbar() {
     }, [router.events]);
 
     const handleLogout = async () => {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch('/api/auth/logout', { method: 'POST' });
         setUser(null);
         router.push('/login/login');
     };
+
 
     // Helper to show dashboard label
     const getDashboardLabel = (role) => {

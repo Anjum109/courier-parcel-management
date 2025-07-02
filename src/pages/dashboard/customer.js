@@ -78,7 +78,7 @@ export default function customer() {
                                 : ""
                                 }`}
                         >
-                            Agent
+                            Show Agent & Cancel Parcel
                         </li>
                     </ul>
                 </div>

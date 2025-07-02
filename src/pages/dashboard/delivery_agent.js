@@ -6,6 +6,8 @@ export default function delivery_agent() {
     const [parcels, setParcels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [cancelingParcelId, setCancelingParcelId] = useState(null);
+    const [cancelReason, setCancelReason] = useState("");
 
     const [updatingParcelId, setUpdatingParcelId] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -135,7 +137,7 @@ export default function delivery_agent() {
                                         <span
                                             className={`px-3 py-1 rounded text-xs font-bold ${statusColors[
                                                 isUpdating ? selectedStatus : parcel.status
-                                                ]
+                                            ]
                                                 }`}
                                         >
                                             {isUpdating ? selectedStatus : parcel.status}
@@ -198,9 +200,98 @@ export default function delivery_agent() {
                                             Send Current Location
                                         </button>
                                     </div>
+                                    {/* cancel  */}
+                                    <div className="flex justify-center items-center mt-3">
+                                        {["Picked Up", "In Transit", "Delivered", "Failed"].includes(parcel.status) ? (
+                                            <button
+                                                disabled
+                                                className="rounded-xl px-5 py-1 text-[10px] bg-gray-300 text-gray-500 cursor-not-allowed"
+                                            >
+                                                Cannot Cancel
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => {
+                                                    setCancelingParcelId(parcel._id);
+                                                    setCancelReason("");
+                                                }}
+                                                className="rounded-xl px-5 py-1 text-[10px] bg-red-700 text-red-50"
+                                            >
+                                                Cancel Delivery
+                                            </button>
+                                        )}
+                                        {cancelingParcelId && (
+                                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                                                <div className="bg-white p-6 rounded shadow max-w-sm w-full">
+                                                    <p className="mb-3 font-semibold text-red-700">
+                                                        Why are you cancelling this delivery?
+                                                    </p>
+                                                    <textarea
+                                                        value={cancelReason}
+                                                        onChange={(e) => setCancelReason(e.target.value)}
+                                                        rows={3}
+                                                        className="w-full border rounded p-2 mb-3 text-sm"
+                                                        placeholder="Enter your reason..."
+                                                    />
+                                                    <div className="flex justify-end space-x-2">
+                                                        <button
+                                                            onClick={() => setCancelingParcelId(null)}
+                                                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm"
+                                                        >
+                                                            No
+                                                        </button>
+                                                        <button
+                                                            onClick={async () => {
+                                                                try {
+                                                                    if (!cancelReason.trim()) {
+                                                                        alert("Please provide a reason.");
+                                                                        return;
+                                                                    }
+
+                                                                    const res = await fetch("/api/parcels/cancel-assignment", {
+                                                                        method: "PATCH",
+                                                                        headers: { "Content-Type": "application/json" },
+                                                                        credentials: "include",
+                                                                        body: JSON.stringify({
+                                                                            parcelId: cancelingParcelId,
+                                                                            reason: cancelReason,
+                                                                        }),
+                                                                    });
+
+                                                                    if (!res.ok) {
+                                                                        const errData = await res.json();
+                                                                        throw new Error(errData.message || "Failed to cancel assignment");
+                                                                    }
+
+                                                                    setParcels((prev) =>
+                                                                        prev.map((p) =>
+                                                                            p._id === cancelingParcelId
+                                                                                ? { ...p, assignedAgent: null }
+                                                                                : p
+                                                                        )
+                                                                    );
+
+                                                                    setCancelingParcelId(null);
+                                                                    setCancelReason("");
+                                                                } catch (err) {
+                                                                    alert(err.message);
+                                                                }
+                                                            }}
+                                                            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                                                        >
+                                                            Yes, Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                    </div>
+
                                 </div>
                             );
                         })}
+
                     </div>
                 )}
 

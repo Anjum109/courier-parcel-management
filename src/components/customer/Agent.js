@@ -4,25 +4,43 @@ export default function Agent() {
     const [parcels, setParcels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
-        const fetchParcels = async () => {
-            try {
-                const res = await fetch("/api/parcels/my", {
-                    credentials: "include",
-                });
-                if (!res.ok) throw new Error("Failed to fetch parcels");
-                const data = await res.json();
-                setParcels(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchParcels();
     }, []);
+
+    const fetchParcels = async () => {
+        try {
+            const res = await fetch("/api/parcels/my", { credentials: "include" });
+            if (!res.ok) throw new Error("Failed to fetch parcels");
+            const data = await res.json();
+            setParcels(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const res = await fetch(`/api/parcels/delete?id=${id}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || "Delete failed");
+            }
+            setParcels(parcels.filter(p => p._id !== id));
+            setConfirmOpen(false);
+            setDeletingId(null);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
     if (loading) return <p className="p-4">Loading parcels...</p>;
     if (error) return <p className="p-4 text-red-600">{error}</p>;
@@ -32,6 +50,7 @@ export default function Agent() {
             <h2 className="text-lg font-semibold mb-4 text-cyan-700">
                 My Parcels and Assigned Agents
             </h2>
+
             <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
                 <table className="min-w-full bg-white">
                     <thead className="bg-gray-100 text-gray-700 text-sm">
@@ -41,12 +60,13 @@ export default function Agent() {
                             <th className="text-left px-4 py-3">Delivery Address</th>
                             <th className="text-left px-4 py-3">Status</th>
                             <th className="text-left px-4 py-3">Assigned Agent</th>
+                            <th className="text-left px-4 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="text-sm text-gray-800">
                         {parcels.length === 0 && (
                             <tr>
-                                <td colSpan="5" className="text-center p-4">
+                                <td colSpan="6" className="text-center p-4">
                                     No parcels booked.
                                 </td>
                             </tr>
@@ -62,11 +82,54 @@ export default function Agent() {
                                         ? parcel.assignedAgent.email
                                         : "Not assigned"}
                                 </td>
+                                <td className="px-4 py-2">
+                                    {!parcel.assignedAgent && (
+                                        <button
+                                            onClick={() => {
+                                                setDeletingId(parcel._id);
+                                                setConfirmOpen(true);
+                                            }}
+                                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
+                                    {parcel.assignedAgent && (
+                                        <span className="text-gray-400 text-xs">
+                                            Cannot Cancel
+                                        </span>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {/* Confirm Modal */}
+            {confirmOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
+                        <p className="mb-4 font-semibold">
+                            Are you sure you want to cancel this parcel booking?
+                        </p>
+                        <div className="flex justify-end space-x-2">
+                            <button
+                                onClick={() => setConfirmOpen(false)}
+                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                            >
+                                No
+                            </button>
+                            <button
+                                onClick={() => handleDelete(deletingId)}
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                            >
+                                Yes, Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
