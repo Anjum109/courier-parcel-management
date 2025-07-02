@@ -262,13 +262,8 @@ export default function delivery_agent() {
                                                                         const errData = await res.json();
                                                                         throw new Error(errData.message || "Failed to cancel assignment");
                                                                     }
-
                                                                     setParcels((prev) =>
-                                                                        prev.map((p) =>
-                                                                            p._id === cancelingParcelId
-                                                                                ? { ...p, assignedAgent: null }
-                                                                                : p
-                                                                        )
+                                                                        prev.filter((p) => p._id !== cancelingParcelId)
                                                                     );
 
                                                                     setCancelingParcelId(null);
