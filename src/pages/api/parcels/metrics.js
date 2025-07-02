@@ -24,8 +24,8 @@ export default async function handler(req, res) {
 
         // Count total COD bookings today
         const codTotalToday = await Parcel.countDocuments({
-            createdAt: { $gte: startOfDay, $lte: endOfDay },
-            paymentMethod: "COD",
+            createdAt: { $gte: startOfDay },
+            paymentMethod: "Cash on Delivery",
         });
 
         // Count failed deliveries today
