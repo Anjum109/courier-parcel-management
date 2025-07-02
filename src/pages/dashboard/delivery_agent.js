@@ -10,6 +10,8 @@ export default function delivery_agent() {
     const [updatingParcelId, setUpdatingParcelId] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("");
 
+    const [successMessage, setSuccessMessage] = useState(""); // NEW
+
     const statusColors = {
         "Picked Up": "bg-blue-100 text-blue-800",
         "In Transit": "bg-cyan-100 text-cyan-800",
@@ -84,7 +86,7 @@ export default function delivery_agent() {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
 
-            await fetch("/api/parcels/update-location", {
+            const res = await fetch("/api/parcels/update-location", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -94,6 +96,14 @@ export default function delivery_agent() {
                     lng: longitude,
                 }),
             });
+
+            if (res.ok) {
+                setSuccessMessage("Location sent successfully!");
+                setTimeout(() => setSuccessMessage(""), 3000);
+            } else {
+                const errorData = await res.json();
+                alert(errorData.message || "Failed to send location");
+            }
         });
     };
 
@@ -103,8 +113,9 @@ export default function delivery_agent() {
     return (
         <>
             <Navbar />
-            <div className="pt-[100px] px-8 bg-gray-50 min-h-screen">
+            <div className="pt-[100px] px-8 bg-gray-50 min-h-screen relative">
                 <h2 className="text-2xl font-bold text-cyan-800 mb-4">Assigned Parcels</h2>
+
                 {parcels.length === 0 ? (
                     <p>No parcels assigned.</p>
                 ) : (
@@ -122,7 +133,9 @@ export default function delivery_agent() {
                                             PARCEL{parcel._id.slice(-4).toUpperCase()}
                                         </span>
                                         <span
-                                            className={`px-3 py-1 rounded text-xs font-bold ${statusColors[isUpdating ? selectedStatus : parcel.status]
+                                            className={`px-3 py-1 rounded text-xs font-bold ${statusColors[
+                                                isUpdating ? selectedStatus : parcel.status
+                                                ]
                                                 }`}
                                         >
                                             {isUpdating ? selectedStatus : parcel.status}
@@ -138,7 +151,8 @@ export default function delivery_agent() {
                                         <p className="text-gray-600 text-sm">
                                             Current Location:{" "}
                                             <span className="font-medium text-cyan-700">
-                                                {parcel.currentLocation.lat.toFixed(4)}, {parcel.currentLocation.lng.toFixed(4)}
+                                                {parcel.currentLocation.lat.toFixed(4)},{" "}
+                                                {parcel.currentLocation.lng.toFixed(4)}
                                             </span>
                                         </p>
                                     )}
@@ -146,9 +160,20 @@ export default function delivery_agent() {
                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
                                         <div className="flex gap-2">
                                             <select
-                                                value={isUpdating ? selectedStatus : parcel.status}
-                                                onChange={(e) => handleStatusChange(parcel._id, e.target.value)}
-                                                disabled={updatingParcelId !== null && !isUpdating}
+                                                value={
+                                                    isUpdating
+                                                        ? selectedStatus
+                                                        : parcel.status
+                                                }
+                                                onChange={(e) =>
+                                                    handleStatusChange(
+                                                        parcel._id,
+                                                        e.target.value
+                                                    )
+                                                }
+                                                disabled={
+                                                    updatingParcelId !== null && !isUpdating
+                                                }
                                                 className="border rounded px-2 py-1 text-sm"
                                             >
                                                 {statusOptions.map((status) => (
@@ -176,6 +201,14 @@ export default function delivery_agent() {
                                 </div>
                             );
                         })}
+                    </div>
+                )}
+
+                {successMessage && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white px-6 py-4 rounded shadow text-center">
+                            <p className="text-green-700 font-semibold">{successMessage}</p>
+                        </div>
                     </div>
                 )}
             </div>
