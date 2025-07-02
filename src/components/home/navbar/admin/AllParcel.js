@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { initSocket } from "@/lib/socket"; // import your socket client utility
 
 export default function AllParcel() {
     const [parcels, setParcels] = useState([]);
@@ -35,6 +36,20 @@ export default function AllParcel() {
 
         fetchParcels();
         fetchAgents();
+
+        // --- SOCKET.IO SETUP ---
+        const socket = initSocket();
+
+        socket.on("parcelUpdated", (updatedParcel) => {
+            setParcels((prev) =>
+                prev.map((p) => (p._id === updatedParcel._id ? updatedParcel : p))
+            );
+        });
+
+        // Clean up on component unmount
+        return () => {
+            socket.off("parcelUpdated");
+        };
     }, []);
 
     const handleAssignClick = (parcelId) => {
@@ -102,7 +117,6 @@ export default function AllParcel() {
                             </tr>
                         )}
                         {parcels.map((parcel, idx) => {
-                            // Determine assignedAgent details
                             const assignedAgent = parcel.assignedAgent
                                 ? typeof parcel.assignedAgent === "object"
                                     ? parcel.assignedAgent
@@ -114,7 +128,7 @@ export default function AllParcel() {
                                     <td className="px-4 py-2">{idx + 1}</td>
                                     <td className="px-4 py-2">{parcel.pickupAddress}</td>
                                     <td className="px-4 py-2">{parcel.deliveryAddress}</td>
-                                    <td className="px-4 py-2  text-red-600 font-bold">{parcel.status}</td>
+                                    <td className="px-4 py-2 text-red-600 font-bold">{parcel.status}</td>
                                     <td className="px-4 py-2">{parcel.paymentMethod}</td>
                                     <td className="px-4 py-2">
                                         {assignedAgent

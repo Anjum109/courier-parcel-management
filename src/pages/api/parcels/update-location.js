@@ -16,32 +16,33 @@ export default async function handler(req, res) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
 
-        const { parcelId, status } = req.body;
-        if (!parcelId || !status) {
-            return res.status(400).json({ message: "Parcel ID and status are required" });
+        const { parcelId, lat, lng } = req.body;
+        if (!parcelId || lat == null || lng == null) {
+            return res.status(400).json({ message: "Parcel ID and location are required" });
         }
 
         const parcel = await Parcel.findById(parcelId);
         if (!parcel) return res.status(404).json({ message: "Parcel not found" });
 
         if (parcel.assignedAgent.toString() !== userId) {
-            return res.status(403).json({ message: "Not allowed to update this parcel" });
+            return res.status(403).json({ message: "You cannot update this parcel" });
         }
 
-        parcel.status = status;
+        parcel.currentLocation = { lat, lng };
         await parcel.save();
 
-        // 🚀 Emit real-time update
+        // Emit Socket.IO event
         if (res.socket.server.io) {
-            res.socket.server.io.emit("statusUpdated", {
-                _id: parcel._id,
-                status: parcel.status,
+            res.socket.server.io.emit("locationUpdated", {
+                parcelId,
+                lat,
+                lng,
             });
         }
 
-        res.status(200).json({ message: "Status updated", parcel });
+        res.status(200).json({ message: "Location updated" });
     } catch (err) {
-        console.error(err);
+        console.error("Update Location Error:", err);
         res.status(500).json({ message: "Server error" });
     }
 }

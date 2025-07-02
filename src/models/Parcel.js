@@ -13,6 +13,11 @@ const ParcelSchema = new mongoose.Schema({
 
     // Add this line to reference the assigned delivery agent
     assignedAgent: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    currentLocation: {
+        lat: Number,
+        lng: Number
+    }
+
 });
 
 export default mongoose.models.Parcel || mongoose.model("Parcel", ParcelSchema);

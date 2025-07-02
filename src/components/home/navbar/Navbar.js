@@ -57,7 +57,7 @@ export default function Navbar() {
             case 'admin':
                 return '/dashboard/admin';
             case 'delivery':
-                return '/dashboard/delivery';
+                return '/dashboard/delivery_agent';
             default:
                 return '/dashboard/customer';
         }

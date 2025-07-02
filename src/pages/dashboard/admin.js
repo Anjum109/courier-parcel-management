@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Metrics from '../components/home/navbar/admin/Metrics';
-import Reports from '../components/home/navbar/admin/Reports';
-import AllParcel from '../components/home/navbar/admin/AllParcel';
-import UserManagement from '../components/home/navbar/admin/UserManagement';
-import Navbar from '../components/home/navbar/Navbar';
+import Navbar from '@/components/home/navbar/Navbar';
+import Metrics from '@/components/home/navbar/admin/Metrics';
+import Reports from '@/components/home/navbar/admin/Reports';
+import AllParcel from '@/components/home/navbar/admin/AllParcel';
 
-export default function AdminDashboard() {
+
+export default function admin() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('dashboard');
     const [username, setUsername] = useState('');

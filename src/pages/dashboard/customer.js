@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Navbar from "../components/home/navbar/Navbar";
-import ParcelBooking from "../components/customer/ParcelBooking";
-import BookingHistory from "../components/customer/BookingHistory";
+import Navbar from "@/components/home/navbar/Navbar";
+import ParcelBooking from "@/components/customer/ParcelBooking";
+import BookingHistory from "@/components/customer/BookingHistory";
+import Agent from "@/components/customer/Agent";
+import ParcelTracking from "@/components/customer/ParcelTracking";
+
 
 export default function customer() {
     const router = useRouter();
@@ -95,18 +98,12 @@ export default function customer() {
                     {activeTab === "bookingHistory" && (
                         <BookingHistory />
                     )}
-                    {activeTab === "myParcels" && (
-                        <div>
-                            <h2 className="text-xl font-bold mb-4">Parcel Booking</h2>
-                            <p>List of parcels will be displayed here.</p>
-                        </div>
+                    {activeTab === "parcelTracking" && (
+                        <ParcelTracking />
                     )}
 
-                    {activeTab === "profile" && (
-                        <div>
-                            <h2 className="text-xl font-bold mb-4">Profile Settings</h2>
-                            <p>Profile update form will go here.</p>
-                        </div>
+                    {activeTab === "agent" && (
+                        <Agent />
                     )}
                 </div>
             </div>

@@ -1,3 +1,5 @@
+// pages/api/parcels/my.js
+
 import { connectDB } from "@/lib/mongodb";
 import Parcel from "@/models/Parcel";
 import jwt from "jsonwebtoken";
@@ -20,11 +22,15 @@ export default async function handler(req, res) {
         let parcels;
 
         if (user.role === "admin") {
-            // Admin: fetch all parcels
-            parcels = await Parcel.find().sort({ createdAt: -1 });
+            // Admin: fetch all parcels with assignedAgent populated
+            parcels = await Parcel.find()
+                .populate("assignedAgent", "email name")
+                .sort({ createdAt: -1 });
         } else {
-            // Customer: fetch their own
-            parcels = await Parcel.find({ customer: user._id }).sort({ createdAt: -1 });
+            // Customer: fetch their own parcels with assignedAgent populated
+            parcels = await Parcel.find({ customer: user._id })
+                .populate("assignedAgent", "email name")
+                .sort({ createdAt: -1 });
         }
 
         res.status(200).json(parcels);

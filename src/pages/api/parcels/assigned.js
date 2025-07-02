@@ -22,4 +22,8 @@ export default async function handler(req, res) {
         console.error(err);
         res.status(500).json({ message: "Server error" });
     }
+    const parcels = await Parcel.find({ assignedAgent: user._id })
+        .populate("customer", "name email")
+        .sort({ createdAt: -1 });
+
 }

@@ -1,7 +1,7 @@
 
-import Navbar from "./components/home/navbar/Navbar";
-import Banner from "./components/home/Banner";
-import Footer from "./components/home/Footer";
+import Banner from '@/components/home/Banner';
+import Navbar from '../components/home/navbar/Navbar'
+import Footer from '@/components/home/Footer';
 
 
 

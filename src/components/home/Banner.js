@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import img from '../../../assets/home.jpg'
+import img from '../../assets/home.jpg'
 import Link from 'next/link'
 import { FaBoxTissue } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";

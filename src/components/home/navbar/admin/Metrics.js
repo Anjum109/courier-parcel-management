@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { initSocket } from "@/lib/socket";  // Import your socket utility
 
 export default function Metrics() {
     const [metrics, setMetrics] = useState({
@@ -24,6 +25,18 @@ export default function Metrics() {
         };
 
         fetchMetrics();
+
+        // --- SOCKET.IO SETUP ---
+        const socket = initSocket();
+
+        // Listen for real-time updates on metrics
+        socket.on("metricsUpdated", (newMetrics) => {
+            setMetrics(newMetrics);
+        });
+
+        return () => {
+            socket.off("metricsUpdated");
+        };
     }, []);
 
     if (loading) {
@@ -49,13 +62,16 @@ export default function Metrics() {
             <h1 className="text-cyan-700 font-bold text-[20px] p-4">Metrics</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-4">
                 <p className="border-2 p-2 text-center bg-cyan-100 border-cyan-200 rounded-xl font-bold text-cyan-700">
-                    Daily Bookings: <br></br> <span className="text-[28px] font-bold text-cyan-900">{metrics.totalBookingsToday}</span>
+                    Daily Bookings: <br />{" "}
+                    <span className="text-[28px] font-bold text-cyan-900">{metrics.totalBookingsToday}</span>
                 </p>
                 <p className="border-2 p-2 text-center bg-cyan-100 border-cyan-200 rounded-xl font-bold text-cyan-700">
-                    COD Total: <br></br> <span className="text-[28px] font-bold text-cyan-900"> {metrics.codTotalToday}</span>
+                    COD Total: <br />{" "}
+                    <span className="text-[28px] font-bold text-cyan-900">{metrics.codTotalToday}</span>
                 </p>
                 <p className="border-2 p-2 text-center bg-cyan-100 border-cyan-200 rounded-xl font-bold text-cyan-700">
-                    Failed Deliveries:<br></br> <span className="text-[28px] font-bold text-cyan-900"> {metrics.failedDeliveriesToday}</span>
+                    Failed Deliveries:<br />{" "}
+                    <span className="text-[28px] font-bold text-cyan-900">{metrics.failedDeliveriesToday}</span>
                 </p>
             </div>
         </div>

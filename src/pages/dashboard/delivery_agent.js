@@ -1,15 +1,23 @@
 "use client";
+import Navbar from "@/components/home/navbar/Navbar";
 import { useEffect, useState } from "react";
-import Navbar from "../components/home/navbar/Navbar";
 
 export default function delivery_agent() {
     const [parcels, setParcels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Track which parcel is being updated and its selected new status
     const [updatingParcelId, setUpdatingParcelId] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("");
+
+    const statusColors = {
+        "Picked Up": "bg-blue-100 text-blue-800",
+        "In Transit": "bg-cyan-100 text-cyan-800",
+        Delivered: "bg-green-100 text-green-800",
+        Failed: "bg-red-100 text-red-800",
+    };
+
+    const statusOptions = ["Picked Up", "In Transit", "Delivered", "Failed"];
 
     useEffect(() => {
         const fetchParcels = async () => {
@@ -17,7 +25,7 @@ export default function delivery_agent() {
                 const res = await fetch("/api/parcels/assigned", { credentials: "include" });
                 if (!res.ok) throw new Error("Failed to fetch parcels");
                 const data = await res.json();
-                setParcels(data);
+                setParcels(sortParcels(data));
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -28,28 +36,25 @@ export default function delivery_agent() {
         fetchParcels();
     }, []);
 
-    const statusColors = {
-        "Picked Up": "bg-blue-200 text-blue-800",
-        "In Transit": "bg-cyan-200 text-cyan-800",
-        Delivered: "bg-green-200 text-green-800",
-        Failed: "bg-red-200 text-red-800",
+    const sortParcels = (list) => {
+        return [...list].sort((a, b) => {
+            if (a.status === "Delivered" && b.status !== "Delivered") return 1;
+            if (a.status !== "Delivered" && b.status === "Delivered") return -1;
+            return 0;
+        });
     };
 
-    const statusOptions = ["Picked Up", "In Transit", "Delivered", "Failed"];
-
-    // Called when a dropdown value changes: sets state for the selected parcel & status, shows Done button
     const handleStatusChange = (parcelId, newStatus) => {
         setUpdatingParcelId(parcelId);
         setSelectedStatus(newStatus);
     };
 
-    // Called when Done clicked — sends update to backend and updates local state if success
     const handleDoneClick = async () => {
         if (!updatingParcelId || !selectedStatus) return;
 
         try {
             const res = await fetch("/api/parcels/update-status", {
-                method: "PATCH", // or POST if you prefer
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({ parcelId: updatingParcelId, status: selectedStatus }),
@@ -60,14 +65,14 @@ export default function delivery_agent() {
                 throw new Error(errorData.message || "Failed to update status");
             }
 
-            // Update local parcels state to reflect new status
             setParcels((prev) =>
-                prev.map((parcel) =>
-                    parcel._id === updatingParcelId ? { ...parcel, status: selectedStatus } : parcel
+                sortParcels(
+                    prev.map((p) =>
+                        p._id === updatingParcelId ? { ...p, status: selectedStatus } : p
+                    )
                 )
             );
 
-            // Reset update controls
             setUpdatingParcelId(null);
             setSelectedStatus("");
         } catch (err) {
@@ -75,51 +80,104 @@ export default function delivery_agent() {
         }
     };
 
-    if (loading) return <p>Loading parcels...</p>;
-    if (error) return <p className="text-red-600">{error}</p>;
+    const handleSendLocation = (parcelId) => {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+
+            await fetch("/api/parcels/update-location", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    parcelId,
+                    lat: latitude,
+                    lng: longitude,
+                }),
+            });
+        });
+    };
+
+    if (loading) return <p className="p-4">Loading parcels...</p>;
+    if (error) return <p className="p-4 text-red-600">{error}</p>;
 
     return (
         <>
             <Navbar />
-            <div className="gap-6 pt-[100px] bg-gray-50 min-h-screen">
-                <div className="bg-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-4">Assigned Parcels</h2>
-                    {parcels.length === 0 && <p>No parcels assigned to you.</p>}
-                    {parcels.map((parcel) => {
-                        const isUpdating = updatingParcelId === parcel._id;
-                        return (
-                            <div
-                                key={parcel._id}
-                                className="flex items-center justify-between mb-3 space-x-4"
-                            >
-                                <span className="font-medium">
-                                    {parcel.pickupAddress} → {parcel.deliveryAddress}
-                                </span>
-                                <select
-                                    value={isUpdating ? selectedStatus : parcel.status}
-                                    onChange={(e) => handleStatusChange(parcel._id, e.target.value)}
-                                    className={`px-2 py-1 rounded ${statusColors[isUpdating ? selectedStatus : parcel.status]
-                                        }`}
-                                    disabled={updatingParcelId !== null && !isUpdating} // disable other selects during update
+            <div className="pt-[100px] px-8 bg-gray-50 min-h-screen">
+                <h2 className="text-2xl font-bold text-cyan-800 mb-4">Assigned Parcels</h2>
+                {parcels.length === 0 ? (
+                    <p>No parcels assigned.</p>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {parcels.map((parcel) => {
+                            const isUpdating = updatingParcelId === parcel._id;
+
+                            return (
+                                <div
+                                    key={parcel._id}
+                                    className="bg-white p-4 shadow-md rounded-lg border border-cyan-100 space-y-2"
                                 >
-                                    {statusOptions.map((status) => (
-                                        <option key={status} value={status}>
-                                            {status}
-                                        </option>
-                                    ))}
-                                </select>
-                                {isUpdating && (
-                                    <button
-                                        onClick={handleDoneClick}
-                                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                                    >
-                                        Done
-                                    </button>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="font-semibold text-gray-500 uppercase">
+                                            PARCEL{parcel._id.slice(-4).toUpperCase()}
+                                        </span>
+                                        <span
+                                            className={`px-3 py-1 rounded text-xs font-bold ${statusColors[isUpdating ? selectedStatus : parcel.status]
+                                                }`}
+                                        >
+                                            {isUpdating ? selectedStatus : parcel.status}
+                                        </span>
+                                    </div>
+                                    <p className="text-lg font-semibold text-cyan-900">
+                                        {parcel.customer?.name || "Unknown Customer"}
+                                    </p>
+                                    <p className="text-gray-600">From: {parcel.pickupAddress}</p>
+                                    <p className="text-gray-600">To: {parcel.deliveryAddress}</p>
+
+                                    {parcel.currentLocation && (
+                                        <p className="text-gray-600 text-sm">
+                                            Current Location:{" "}
+                                            <span className="font-medium text-cyan-700">
+                                                {parcel.currentLocation.lat.toFixed(4)}, {parcel.currentLocation.lng.toFixed(4)}
+                                            </span>
+                                        </p>
+                                    )}
+
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
+                                        <div className="flex gap-2">
+                                            <select
+                                                value={isUpdating ? selectedStatus : parcel.status}
+                                                onChange={(e) => handleStatusChange(parcel._id, e.target.value)}
+                                                disabled={updatingParcelId !== null && !isUpdating}
+                                                className="border rounded px-2 py-1 text-sm"
+                                            >
+                                                {statusOptions.map((status) => (
+                                                    <option key={status} value={status}>
+                                                        {status}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {isUpdating && (
+                                                <button
+                                                    onClick={handleDoneClick}
+                                                    className="bg-green-500 text-white text-sm px-3 py-1 rounded hover:bg-green-600"
+                                                >
+                                                    Done
+                                                </button>
+                                            )}
+                                        </div>
+                                        <button
+                                            onClick={() => handleSendLocation(parcel._id)}
+                                            className="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
+                                        >
+                                            Send Current Location
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </>
     );

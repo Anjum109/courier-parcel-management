@@ -1,3 +1,4 @@
+// api/auth/parcels/assign.js 
 import { connectDB } from "@/lib/mongodb";
 import Parcel from "@/models/Parcel";
 import jwt from "jsonwebtoken";
