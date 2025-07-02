@@ -73,16 +73,26 @@ export default function ParcelTracking() {
 
                             {parcel.currentLocation ? (
                                 <p className="text-sm mt-2 text-green-700 font-semibold">
-                                    Current Location:{" "}
-                                    {locationsMap[parcel._id]
-                                        ? locationsMap[parcel._id]
-                                        : `${parcel.currentLocation.lat.toFixed(4)}, ${parcel.currentLocation.lng.toFixed(4)}`}
+                                    <span
+                                        className="underline cursor-pointer hover:text-blue-600"
+                                        onClick={() => {
+                                            const lat = parcel.currentLocation.lat;
+                                            const lng = parcel.currentLocation.lng;
+                                            window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
+                                        }}
+                                    >
+                                        Current Location:{" "}
+                                        {locationsMap[parcel._id]
+                                            ? locationsMap[parcel._id]
+                                            : `${parcel.currentLocation.lat.toFixed(4)}, ${parcel.currentLocation.lng.toFixed(4)}`}
+                                    </span>
                                 </p>
                             ) : (
                                 <p className="text-sm mt-2 text-red-500">
                                     Location not available yet.
                                 </p>
                             )}
+
                         </div>
                     ))}
                 </div>
