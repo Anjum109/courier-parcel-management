@@ -4,6 +4,7 @@ import Navbar from '@/components/home/navbar/Navbar';
 import Metrics from '@/components/home/navbar/admin/Metrics';
 import Reports from '@/components/home/navbar/admin/Reports';
 import AllParcel from '@/components/home/navbar/admin/AllParcel';
+import UserManagement from '@/components/home/navbar/admin/UserManagement';
 
 
 export default function admin() {

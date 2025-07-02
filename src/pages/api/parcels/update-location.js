@@ -28,15 +28,27 @@ export default async function handler(req, res) {
             return res.status(403).json({ message: "You cannot update this parcel" });
         }
 
-        parcel.currentLocation = { lat, lng };
+        // Reverse geocode the coordinates to get address
+        let address = "Unknown location";
+        try {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const geoData = await geoRes.json();
+            address = geoData.display_name || address;
+        } catch (geoErr) {
+            console.error("Reverse geocoding failed:", geoErr);
+        }
+
+        // Save in database
+        parcel.currentLocation = { lat, lng, address };
         await parcel.save();
 
-        // Emit Socket.IO event
+        // Emit the update via Socket.IO
         if (res.socket.server.io) {
             res.socket.server.io.emit("locationUpdated", {
                 parcelId,
                 lat,
                 lng,
+                address,
             });
         }
 

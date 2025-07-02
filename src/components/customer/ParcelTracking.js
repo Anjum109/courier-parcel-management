@@ -15,13 +15,16 @@ export default function ParcelTracking() {
 
         fetchParcels();
 
-        const socketInstance = io({ path: "/api/socketio" });
+        const socketInstance = io({ path: "/api/socket" });
         setSocket(socketInstance);
 
-        socketInstance.on("locationUpdated", ({ parcelId, lat, lng }) => {
+        // Listen for the socket event with address
+        socketInstance.on("locationUpdated", ({ parcelId, lat, lng, address }) => {
             setParcels((prev) =>
                 prev.map((p) =>
-                    p._id === parcelId ? { ...p, currentLocation: { lat, lng } } : p
+                    p._id === parcelId
+                        ? { ...p, currentLocation: { lat, lng, address } }
+                        : p
                 )
             );
         });
@@ -30,6 +33,7 @@ export default function ParcelTracking() {
             socketInstance.disconnect();
         };
     }, []);
+
 
     return (
         <div className="p-6">
@@ -52,12 +56,17 @@ export default function ParcelTracking() {
 
                             {parcel.currentLocation ? (
                                 <p className="text-sm mt-2 text-green-700 font-semibold">
-                                    Current Location: {parcel.currentLocation.lat.toFixed(4)},{" "}
-                                    {parcel.currentLocation.lng.toFixed(4)}
+                                    Current Location: {parcel.currentLocation.address || (
+                                        <>
+                                            {parcel.currentLocation.lat.toFixed(4)}, {parcel.currentLocation.lng.toFixed(4)}
+                                        </>
+                                    )}
                                 </p>
                             ) : (
                                 <p className="text-sm mt-2 text-red-500">Location not available yet.</p>
                             )}
+
+
                         </div>
                     ))}
                 </div>
