@@ -23,7 +23,7 @@ export default function Signup() {
         setSuccess('');
 
         try {
-            const res = await fetch("/api/auth/signup", {
+            const res = await fetch("https://courier-service-beta.vercel.app/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password, role }),

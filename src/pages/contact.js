@@ -1,6 +1,6 @@
 import Navbar from "@/components/home/navbar/Navbar";
 import Loader from "@/components/Loader";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 
 export default function Contact() {
