@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import { IoMdDownload } from "react-icons/io";
 import { initSocket } from "@/lib/socket";
+import Loader from "@/components/Loader";
 
 export default function Reports() {
     const [parcels, setParcels] = useState([]);
@@ -102,7 +103,7 @@ export default function Reports() {
         }
     };
 
-    if (loading) return <p className="p-4">Loading report data...</p>;
+    if (loading) return <Loader />
     if (error) return <p className="p-4 text-red-600">{error}</p>;
 
     return (

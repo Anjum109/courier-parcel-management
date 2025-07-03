@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-
+import dynamic from 'next/dynamic';
+const Loader = dynamic(() => import('../../components/Loader'), { ssr: false });
 export default function LoginPage() {
     const router = useRouter();
 
@@ -9,11 +10,11 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
     const [error, setError] = useState('');
-
+    const [loading, setLoading] = useState(false);
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
-
+        setLoading(true);
         try {
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
@@ -43,11 +44,12 @@ export default function LoginPage() {
 
         } catch (err) {
             setError(err.message);
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
             <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 

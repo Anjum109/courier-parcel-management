@@ -1,7 +1,8 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+const Loader = dynamic(() => import('../../components/Loader'), { ssr: false });
 export default function Signup() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export default function Signup() {
 
             if (!res.ok) throw new Error(data.message || "Something went wrong");
 
-            router.push('/');
+            router.push('/login/login');
             setName("");
             setEmail("");
             setPassword("");

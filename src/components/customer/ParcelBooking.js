@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Loader from "../Loader";
 
 export default function ParcelBooking() {
     const [pickupAddress, setPickupAddress] = useState("");
@@ -43,6 +44,19 @@ export default function ParcelBooking() {
         }
     };
 
+
+    useEffect(() => {
+
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return <Loader />;
+    }
     return (
         <div>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
@@ -51,8 +65,8 @@ export default function ParcelBooking() {
                 {message && (
                     <div
                         className={`mb-4 p-2 rounded ${message.startsWith("✅")
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
                             }`}
                     >
                         {message}

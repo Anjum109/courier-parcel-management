@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Loader from '../Loader';
 
 export default function BookingHistory() {
     const [bookings, setBookings] = useState([]);
@@ -33,11 +34,11 @@ export default function BookingHistory() {
         Delivered: 'bg-emerald-500',
     };
 
-    if (loading) return <p>Loading booking history...</p>;
+    if (loading) return <Loader />
     if (error) return <p>{error}</p>;
 
     return (
-        <div className="bg-white p-6 mt-6 rounded shadow-md">
+        <div className="bg-white p-3 lg:p-6 mt-6 rounded shadow-md">
             <h2 className="text-xl font-semibold mb-4">Booking History</h2>
             <table className="w-full text-left border-collapse">
                 <thead>

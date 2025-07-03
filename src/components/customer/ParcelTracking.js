@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import Loader from "../Loader";
 
 export default function ParcelTracking() {
     const [parcels, setParcels] = useState([]);
@@ -51,7 +52,20 @@ export default function ParcelTracking() {
             console.error("Reverse geocoding failed:", err);
         }
     };
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return <Loader />;
+    }
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold text-cyan-800 mb-4">Parcel Tracking</h2>

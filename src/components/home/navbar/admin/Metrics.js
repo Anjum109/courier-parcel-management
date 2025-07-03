@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { initSocket } from "@/lib/socket";  // Import your socket utility
+import Loader from "@/components/Loader";
 
 export default function Metrics() {
     const [metrics, setMetrics] = useState({
@@ -43,7 +44,7 @@ export default function Metrics() {
         return (
             <div className="m-5 bg-cyan-50 rounded-xl p-4">
                 <h1 className="text-cyan-700 font-bold text-[20px] mb-2">Metrics</h1>
-                <p>Loading metrics...</p>
+                <div>  <Loader /></div>
             </div>
         );
     }

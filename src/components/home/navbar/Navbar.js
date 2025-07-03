@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { BsPersonCircle } from "react-icons/bs";
+import dynamic from "next/dynamic";
+
+const Loader = dynamic(() => import('../../Loader'), { ssr: false });
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null); // { email, role } or null
+    const [user, setUser] = useState(null);
     const router = useRouter();
+    const [loading, setLoading] = useState(false); // for loader
 
     useEffect(() => {
         const checkLogin = async () => {
@@ -23,10 +28,7 @@ export default function Navbar() {
             }
         };
 
-        // Initial check
         checkLogin();
-
-        // Re-check login on route change
         router.events.on('routeChangeComplete', checkLogin);
         return () => {
             router.events.off('routeChangeComplete', checkLogin);
@@ -34,38 +36,41 @@ export default function Navbar() {
     }, [router.events]);
 
     const handleLogout = async () => {
-        await fetch('/api/auth/logout', { method: 'POST' });
-        setUser(null);
-        router.push('/login/login');
-    };
-
-
-    // Helper to show dashboard label
-    const getDashboardLabel = (role) => {
-        switch (role) {
-            case 'admin':
-                return 'Admin Dashboard';
-            case 'delivery':
-                return 'Delivery Agent Dashboard';
-            default:
-                return 'User Dashboard';
+        setLoading(true);
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            setUser(null);
+            router.push('/login/login');
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Helper to get dashboard link
-    const getDashboardLink = (role) => {
+    const handleDashboardRedirect = (role) => {
+        setLoading(true);
+        const path =
+            role === 'admin'
+                ? '/dashboard/admin'
+                : role === 'delivery'
+                    ? '/dashboard/delivery_agent'
+                    : '/dashboard/customer';
+        router.push(path);
+    };
+
+    const getDashboardLabel = (role) => {
         switch (role) {
-            case 'admin':
-                return '/dashboard/admin';
-            case 'delivery':
-                return '/dashboard/delivery_agent';
-            default:
-                return '/dashboard/customer';
+            case 'admin': return 'Admin Dashboard';
+            case 'delivery': return 'Delivery Agent Dashboard';
+            default: return 'User Dashboard';
         }
     };
 
     return (
         <nav className="bg-white shadow-md fixed w-full z-20">
+            {loading && <Loader />} {/* Loader display */}
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <div className="text-xl font-bold text-gray-800">Courier.Jx</div>
@@ -76,12 +81,12 @@ export default function Navbar() {
                         <Link href="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
 
                         {user && (
-                            <Link
-                                href={getDashboardLink(user.role)}
+                            <button
+                                onClick={() => handleDashboardRedirect(user.role)}
                                 className="py-1 px-4 border rounded bg-green-700 text-white hover:bg-green-600"
                             >
                                 {getDashboardLabel(user.role)}
-                            </Link>
+                            </button>
                         )}
 
                         {user ? (
@@ -96,8 +101,9 @@ export default function Navbar() {
                                 <button className="py-1 px-5 border-2 rounded-xl bg-cyan-900 text-cyan-100">Login</button>
                             </Link>
                         )}
-                        <div className="text-[25px]"><BsPersonCircle />
 
+                        <div className="text-[25px]">
+                            <BsPersonCircle />
                         </div>
                     </div>
 
@@ -120,12 +126,12 @@ export default function Navbar() {
                         <Link href="/contact" className="block text-gray-700 hover:text-blue-600">Contact</Link>
 
                         {user && (
-                            <Link
-                                href={getDashboardLink(user.role)}
-                                className="block text-green-700 font-semibold"
+                            <button
+                                onClick={() => handleDashboardRedirect(user.role)}
+                                className="block w-full text-left text-green-700 font-semibold"
                             >
                                 {getDashboardLabel(user.role)}
-                            </Link>
+                            </button>
                         )}
 
                         {user ? (
@@ -139,7 +145,6 @@ export default function Navbar() {
                             <Link href="/login/login" className="block text-gray-700 hover:text-blue-600">Login</Link>
                         )}
                     </div>
-
                 </div>
             )}
         </nav>

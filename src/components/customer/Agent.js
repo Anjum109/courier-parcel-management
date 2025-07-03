@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Loader from "../Loader";
 
 export default function Agent() {
     const [parcels, setParcels] = useState([]);
@@ -34,7 +35,7 @@ export default function Agent() {
                 const data = await res.json();
                 throw new Error(data.message || "Delete failed");
             }
-            setParcels(parcels.filter(p => p._id !== id));
+            setParcels(parcels.filter((p) => p._id !== id));
             setConfirmOpen(false);
             setDeletingId(null);
         } catch (err) {
@@ -42,7 +43,7 @@ export default function Agent() {
         }
     };
 
-    if (loading) return <p className="p-4">Loading parcels...</p>;
+    if (loading) return <Loader />
     if (error) return <p className="p-4 text-red-600">{error}</p>;
 
     return (
@@ -51,9 +52,10 @@ export default function Agent() {
                 My Parcels and Assigned Agents
             </h2>
 
-            <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-                <table className="min-w-full bg-white">
-                    <thead className="bg-gray-100 text-gray-700 text-sm">
+            {/* TABLE for screens sm and above */}
+            <div className="hidden sm:block overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                <table className="min-w-full bg-white text-sm md:text-base">
+                    <thead className="bg-gray-100 text-gray-700">
                         <tr>
                             <th className="text-left px-4 py-3">#</th>
                             <th className="text-left px-4 py-3">Pickup Address</th>
@@ -63,7 +65,7 @@ export default function Agent() {
                             <th className="text-left px-4 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="text-sm text-gray-800">
+                    <tbody className="text-gray-800">
                         {parcels.length === 0 && (
                             <tr>
                                 <td colSpan="6" className="text-center p-4">
@@ -74,36 +76,76 @@ export default function Agent() {
                         {parcels.map((parcel, idx) => (
                             <tr key={parcel._id || idx} className="border-t">
                                 <td className="px-4 py-2">{idx + 1}</td>
-                                <td className="px-4 py-2">{parcel.pickupAddress}</td>
-                                <td className="px-4 py-2">{parcel.deliveryAddress}</td>
+                                <td className="px-4 py-2 break-words max-w-xs">{parcel.pickupAddress}</td>
+                                <td className="px-4 py-2 break-words max-w-xs">{parcel.deliveryAddress}</td>
                                 <td className="px-4 py-2">{parcel.status}</td>
-                                <td className="px-4 py-2">
-                                    {parcel.assignedAgent
-                                        ? parcel.assignedAgent.email
-                                        : "Not assigned"}
+                                <td className="px-4 py-2 truncate max-w-xs">
+                                    {parcel.assignedAgent ? parcel.assignedAgent.email : "Not assigned"}
                                 </td>
-                                <td className="px-4 py-2">
-                                    {!parcel.assignedAgent && (
+                                <td className="px-4 py-2 whitespace-nowrap">
+                                    {!parcel.assignedAgent ? (
                                         <button
                                             onClick={() => {
                                                 setDeletingId(parcel._id);
                                                 setConfirmOpen(true);
                                             }}
-                                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
                                         >
                                             Cancel
                                         </button>
-                                    )}
-                                    {parcel.assignedAgent && (
-                                        <span className="text-gray-400 text-xs">
-                                            Cannot Cancel
-                                        </span>
+                                    ) : (
+                                        <span className="text-gray-400 text-xs">Cannot Cancel</span>
                                     )}
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* CARD list for mobile (below sm) */}
+            <div className="sm:hidden space-y-4">
+                {parcels.length === 0 && (
+                    <p className="text-center p-4">No parcels booked.</p>
+                )}
+                {parcels.map((parcel, idx) => (
+                    <div
+                        key={parcel._id || idx}
+                        className="bg-white p-4 rounded-xl shadow border border-gray-200"
+                    >
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="font-semibold text-cyan-700">Parcel #{idx + 1}</span>
+                            <span className="text-sm text-gray-600">{parcel.status}</span>
+                        </div>
+                        <p>
+                            <span className="font-semibold">Pickup:</span>{" "}
+                            <span>{parcel.pickupAddress}</span>
+                        </p>
+                        <p>
+                            <span className="font-semibold">Delivery:</span>{" "}
+                            <span>{parcel.deliveryAddress}</span>
+                        </p>
+                        <p>
+                            <span className="font-semibold">Agent:</span>{" "}
+                            <span>{parcel.assignedAgent ? parcel.assignedAgent.email : "Not assigned"}</span>
+                        </p>
+                        <div className="mt-3">
+                            {!parcel.assignedAgent ? (
+                                <button
+                                    onClick={() => {
+                                        setDeletingId(parcel._id);
+                                        setConfirmOpen(true);
+                                    }}
+                                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full"
+                                >
+                                    Cancel Booking
+                                </button>
+                            ) : (
+                                <span className="text-gray-400 text-center block">Cannot Cancel</span>
+                            )}
+                        </div>
+                    </div>
+                ))}
             </div>
 
             {/* Confirm Modal */}

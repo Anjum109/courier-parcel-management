@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { initSocket } from "@/lib/socket"; // import your socket client utility
+import { initSocket } from "@/lib/socket";
+import Loader from "@/components/Loader";
 
 export default function AllParcel() {
     const [parcels, setParcels] = useState([]);
@@ -37,16 +38,13 @@ export default function AllParcel() {
         fetchParcels();
         fetchAgents();
 
-        // --- SOCKET.IO SETUP ---
         const socket = initSocket();
-
         socket.on("parcelUpdated", (updatedParcel) => {
             setParcels((prev) =>
                 prev.map((p) => (p._id === updatedParcel._id ? updatedParcel : p))
             );
         });
 
-        // Clean up on component unmount
         return () => {
             socket.off("parcelUpdated");
         };
@@ -89,13 +87,15 @@ export default function AllParcel() {
         }
     };
 
-    if (loading) return <p className="p-4">Loading parcels...</p>;
+    if (loading) return <p className="p-4"><Loader /></p>;
     if (error) return <p className="p-4 text-red-600">{error}</p>;
 
     return (
         <div className="m-4 bg-cyan-50 p-4 rounded-xl">
             <h2 className="text-lg font-semibold mb-4 text-cyan-700">All Parcels</h2>
-            <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+
+            {/* TABLE VIEW: visible on sm and larger */}
+            <div className="hidden sm:block overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
                 <table className="min-w-full bg-white">
                     <thead className="bg-gray-100 text-gray-700 text-sm">
                         <tr>
@@ -135,7 +135,7 @@ export default function AllParcel() {
                                             ? `${assignedAgent.name} (${assignedAgent.email})`
                                             : "Not assigned"}
                                     </td>
-                                    <td className="px-4 py-2 space-x-2">
+                                    <td className="px-4 py-2 space-x-2 whitespace-nowrap">
                                         {assigningParcelId === parcel._id ? (
                                             <>
                                                 <select
@@ -178,6 +178,83 @@ export default function AllParcel() {
                         })}
                     </tbody>
                 </table>
+            </div>
+
+            {/* CARD VIEW: visible on mobile screens only */}
+            <div className="sm:hidden space-y-4">
+                {parcels.length === 0 && (
+                    <p className="text-center p-4">No parcels found.</p>
+                )}
+                {parcels.map((parcel, idx) => {
+                    const assignedAgent = parcel.assignedAgent
+                        ? typeof parcel.assignedAgent === "object"
+                            ? parcel.assignedAgent
+                            : agents.find((a) => a._id === parcel.assignedAgent)
+                        : null;
+
+                    return (
+                        <div
+                            key={parcel._id || idx}
+                            className="bg-white p-4 rounded-xl shadow border border-gray-200"
+                        >
+                            <div className="flex justify-between items-center mb-2">
+                                <span className="font-semibold text-cyan-700">Parcel #{idx + 1}</span>
+                                <span className="text-sm text-red-600 font-bold">{parcel.status}</span>
+                            </div>
+                            <p className="mb-1">
+                                <span className="font-semibold">Pickup:</span> {parcel.pickupAddress}
+                            </p>
+                            <p className="mb-1">
+                                <span className="font-semibold">Delivery:</span> {parcel.deliveryAddress}
+                            </p>
+                            <p className="mb-1">
+                                <span className="font-semibold">Payment:</span> {parcel.paymentMethod}
+                            </p>
+                            <p className="mb-3">
+                                <span className="font-semibold">Agent:</span>{" "}
+                                {assignedAgent ? `${assignedAgent.name} (${assignedAgent.email})` : "Not assigned"}
+                            </p>
+                            <div>
+                                {assigningParcelId === parcel._id ? (
+                                    <>
+                                        <select
+                                            value={selectedAgentId || ""}
+                                            onChange={(e) => setSelectedAgentId(e.target.value)}
+                                            className="border p-1 w-full mb-2"
+                                        >
+                                            <option value="">Select Agent</option>
+                                            {agents.map((agent) => (
+                                                <option key={agent._id} value={agent._id}>
+                                                    {agent.name} ({agent.email})
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            onClick={handleDoneClick}
+                                            className="w-full px-4 py-2 bg-green-500 text-white rounded"
+                                        >
+                                            Done
+                                        </button>
+                                    </>
+                                ) : assignedAgent ? (
+                                    <button
+                                        disabled
+                                        className="w-full px-4 py-2 bg-gray-200 text-gray-600 rounded cursor-not-allowed"
+                                    >
+                                        Assigned
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => handleAssignClick(parcel._id)}
+                                        className="w-full px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100"
+                                    >
+                                        Assign Agent
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
