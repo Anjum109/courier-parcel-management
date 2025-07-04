@@ -1,3 +1,4 @@
+import { alumni, lilita } from "@/lib/font";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,7 +24,7 @@ export default function Signup() {
         setSuccess('');
 
         try {
-            const res = await fetch("https://courier-service-beta.vercel.app/api/auth/signup", {
+            const res = await fetch("/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password, role }),
@@ -47,14 +48,14 @@ export default function Signup() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold mb-4 text-center">Signup System</h2>
+                <h2 className="text-[30px] font-bold mb-4 text-center"><span className={lilita.className}>Signup System</span></h2>
 
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-gray-700 mb-1">Name</label>
+                        <label className="block text-gray-700 mb-1"><span className={alumni.className}>Name</span></label>
                         <input
                             type="text"
                             className="w-full border border-gray-300 rounded px-3 py-2"
@@ -64,7 +65,7 @@ export default function Signup() {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 mb-1">Email</label>
+                        <label className="block text-gray-700 mb-1"><span className={alumni.className}>Email</span></label>
                         <input
                             type="email"
                             className="w-full border border-gray-300 rounded px-3 py-2"
@@ -74,7 +75,7 @@ export default function Signup() {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 mb-1">Password</label>
+                        <label className="block text-gray-700 mb-1"><span className={alumni.className}>Password</span></label>
                         <input
                             type="password"
                             className="w-full border border-gray-300 rounded px-3 py-2"
@@ -84,7 +85,7 @@ export default function Signup() {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 mb-1">Confirm Password</label>
+                        <label className="block text-gray-700 mb-1"><span className={alumni.className}>Confirm Password</span></label>
                         <input
                             type="password"
                             className="w-full border border-gray-300 rounded px-3 py-2"
@@ -97,7 +98,7 @@ export default function Signup() {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 mb-1">Role</label>
+                        <label className="block text-gray-700 mb-1"><span className={alumni.className}>Role</span></label>
                         <select
                             className="w-full border border-gray-300 rounded px-3 py-2"
                             value={role}

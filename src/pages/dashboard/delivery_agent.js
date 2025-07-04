@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/home/navbar/Navbar";
+import { mono } from "@/lib/font";
 import { useEffect, useState } from "react";
 
 export default function delivery_agent() {
@@ -116,7 +117,7 @@ export default function delivery_agent() {
         <>
             <Navbar />
             <div className="pt-[100px] px-8 bg-gray-50 min-h-screen relative">
-                <h2 className="text-2xl font-bold text-cyan-800 mb-4">Assigned Parcels</h2>
+                <h2 className="text-2xl font-bold text-cyan-800 mb-4"><span className={mono.className}>Assigned Parcels</span></h2>
 
                 {parcels.length === 0 ? (
                     <p>No parcels assigned.</p>

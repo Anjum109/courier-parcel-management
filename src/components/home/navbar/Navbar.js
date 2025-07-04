@@ -4,6 +4,8 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { BsPersonCircle } from "react-icons/bs";
 import dynamic from "next/dynamic";
+import { mono, pacifico } from "@/lib/font";
+
 
 const Loader = dynamic(() => import('../../Loader'), { ssr: false });
 
@@ -73,19 +75,19 @@ export default function Navbar() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
-                    <div className="text-xl font-bold text-gray-800">Courier.Jx</div>
+                    <div className="text-[30px] font-bold text-gray-800"><span className={pacifico.className}>Courier.Jx</span></div>
 
                     <div className="hidden md:flex space-x-6 items-center">
-                        <Link href="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-                        <Link href="/about" className="text-gray-700 hover:text-blue-600">About</Link>
-                        <Link href="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
+                        <Link href="/" className="text-gray-700 hover:text-blue-600"><span className={mono.className}>Home</span></Link>
+                        <Link href="/about" className="text-gray-700 hover:text-blue-600"><span className={mono.className}>About</span></Link>
+                        <Link href="/contact" className="text-gray-700 hover:text-blue-600"><span className={mono.className}>Contact</span></Link>
 
                         {user && (
                             <button
                                 onClick={() => handleDashboardRedirect(user.role)}
                                 className="py-1 px-4 border rounded bg-green-700 text-white hover:bg-green-600"
                             >
-                                {getDashboardLabel(user.role)}
+                                <span className={mono.className}>{getDashboardLabel(user.role)}</span>
                             </button>
                         )}
 
@@ -94,11 +96,11 @@ export default function Navbar() {
                                 onClick={handleLogout}
                                 className="py-1 px-5 border-2 rounded-xl bg-red-900 text-red-100"
                             >
-                                Logout
+                                <span className={mono.className}>Logout</span>
                             </button>
                         ) : (
                             <Link href="/login/login">
-                                <button className="py-1 px-5 border-2 rounded-xl bg-cyan-900 text-cyan-100">Login</button>
+                                <button className="py-1 px-5 border-2 rounded-xl bg-cyan-900 text-cyan-100"><span className={mono.className}>Login</span></button>
                             </Link>
                         )}
 
@@ -121,16 +123,16 @@ export default function Navbar() {
             {isOpen && (
                 <div className="md:hidden bg-white border-t border-gray-200">
                     <div className="px-2 py-3 space-y-1">
-                        <Link href="/" className="block text-gray-700 hover:text-blue-600">Home</Link>
-                        <Link href="/about" className="block text-gray-700 hover:text-blue-600">About</Link>
-                        <Link href="/contact" className="block text-gray-700 hover:text-blue-600">Contact</Link>
+                        <Link href="/" className="block text-gray-700 hover:text-blue-600"><span className={mono.className}>Home</span></Link>
+                        <Link href="/about" className="block text-gray-700 hover:text-blue-600"><span className={mono.className}>About</span></Link>
+                        <Link href="/contact" className="block text-gray-700 hover:text-blue-600"><span className={mono.className}>Contact</span></Link>
 
                         {user && (
                             <button
                                 onClick={() => handleDashboardRedirect(user.role)}
                                 className="block w-full text-left text-green-700 font-semibold"
                             >
-                                {getDashboardLabel(user.role)}
+                                <span className={mono.className}>{getDashboardLabel(user.role)}</span>
                             </button>
                         )}
 
@@ -139,7 +141,7 @@ export default function Navbar() {
                                 onClick={handleLogout}
                                 className="block w-full text-left text-red-700"
                             >
-                                Logout
+                                <span className={mono.className}>Logout</span>
                             </button>
                         ) : (
                             <Link href="/login/login" className="block text-gray-700 hover:text-blue-600">Login</Link>

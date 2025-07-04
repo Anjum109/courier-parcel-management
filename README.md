@@ -1,5 +1,15 @@
 MERN Stack Assignment: Courier and Parcel Management System
 
+Login:
+Admin: admin@gmail.com
+password: 123456
+
+Customer: customer@gmail.com
+Password: 123456
+
+DeliveryAgent: DeliveryAgent@gmail.com
+Password: 123456
+
 🔹 About Project
 I have made a project that includes three roles:
 
@@ -108,6 +118,7 @@ Map Tracking: Google Maps API
 [✅] CSV/PDF report exports
 
 📝 Deliverables (Done)
+
 ✅ GitHub Repository with code
 
 ✅ Hosted Web App (Vercel)
@@ -117,3 +128,27 @@ Map Tracking: Google Maps API
 ✅ PDF Final Report
 
 ✅ Video Demo
+
+{ postman collections 
+http://localhost:3000/api/parcels/my
+http://localhost:3000/api/parcels/metrics
+http://localhost:3000/api/parcels/report
+http://localhost:3000/api/me
+/api/parcels/assigned
+https://courier-service-beta.vercel.app/api/parcels/update-status
+https://courier-service-beta.vercel.app/api/parcels/my
+https://courier-service-beta.vercel.app/api/parcels/metrics
+https://courier-service-beta.vercel.app/api/parcels/report
+https://courier-service-beta.vercel.app/api/me
+/api/parcels/assigned
+https://courier-service-beta.vercel.app/api/parcels/update-status
+
+Key=Cookie
+Value= token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYzODhiMjk5Y2E0NGNlZjc2Y2E4ZDEiLCJlbWFpbCI6ImN1c3RvbWVyQGdtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTc1MTQ2NDA5MywiZXhwIjoxNzUyMDY4ODkzfQ.lIuLoG6b0nUk0NhZxn-BS1tg2ZIcTb4unBsJTaduKVk }
+
+{ http://localhost:3000/api/users
+http://localhost:3000/api/users/agents
+https://courier-service-beta.vercel.app/api/users
+https://courier-service-beta.vercel.app/api/users/agents
+Key=Cookie
+Value=  token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYzOGI3Mzk5Y2E0NGNlZjc2Y2E4ZDUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MTQ2NjM4NSwiZXhwIjoxNzUyMDcxMTg1fQ.XG2Fib - bl1a64hJ1w9LmrUNpkLvA_bC9jRC - Kj4rQ2Q }

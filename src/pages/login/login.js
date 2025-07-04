@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { alumni, lilita } from '@/lib/font';
 const Loader = dynamic(() => import('../../components/Loader'), { ssr: false });
 export default function LoginPage() {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function LoginPage() {
         setError('');
         setLoading(true);
         try {
-            const res = await fetch('https://courier-service-beta.vercel.app/api/auth/login', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -51,13 +52,13 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
             <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+                <h2 className="text-[30px] font-bold mb-6 text-center"><span className={lilita.className}>Login</span></h2>
 
                 {error && <p className="text-red-500 mb-4">{error}</p>}
 
-                <form className="space-y-4" onSubmit={handleLogin}>
+                <form className="space-y-4 text-[20px]" onSubmit={handleLogin}>
                     <div>
-                        <label className="block mb-1 font-medium">Email</label>
+                        <label className="block mb-1 font-medium"><span className={alumni.className}>Email</span></label>
                         <input
                             type="email"
                             className="w-full border rounded p-2"
@@ -68,7 +69,7 @@ export default function LoginPage() {
                     </div>
 
                     <div>
-                        <label className="block mb-1 font-medium">Password</label>
+                        <label className="block mb-1 font-medium"> <span className={alumni.className}>Password </span></label>
                         <input
                             type="password"
                             className="w-full border rounded p-2"
@@ -79,7 +80,7 @@ export default function LoginPage() {
                     </div>
 
                     <div>
-                        <label className="block mb-1 font-medium">Role</label>
+                        <label className="block mb-1 font-medium"><span className={alumni.className}> Role</span></label>
                         <select
                             className="w-full border rounded p-2"
                             value={role}

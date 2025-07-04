@@ -6,6 +6,7 @@ import { FaBoxTissue } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaStackOverflow } from "react-icons/fa6";
+import { exo, lilita } from '@/lib/font';
 
 export default function Banner() {
     return (
@@ -20,20 +21,20 @@ export default function Banner() {
                 />
                 <div>
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-900 mt-4 md:mt-0">
-                        Fast, Reliable, and Real Time Courier Management
+                        <span className={exo.className}> Fast, Reliable, and Real Time Courier Management</span>
                     </h1>
                     <p className="text-sm md:text-base mt-2 text-gray-700">
-                        Book parcels, assign agents, track deliveries in real time—all in one platform.
+                        <span className={exo.className}>  Book parcels, assign agents, track deliveries in real time—all in one platform.</span>
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 mt-5">
                         <Link href="/login/login">
                             <button className="w-full sm:w-auto py-2 px-4 border-2 rounded-xl bg-cyan-900 text-white">
-                                Log in as Customer
+                                <span className={exo.className}>    Log in as Customer</span>
                             </button>
                         </Link>
                         <Link href="/login/login">
                             <button className="w-full sm:w-auto py-2 px-4 rounded-xl text-cyan-900 bg-cyan-100 font-bold">
-                                Log in as Delivery Agent
+                                <span className={exo.className}>  Log in as Delivery Agent</span>
                             </button>
                         </Link>
                     </div>
@@ -47,7 +48,7 @@ export default function Banner() {
                         <FaBoxTissue />
                     </div>
                     <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                        Book a Parcel Pickup
+                        <span className={exo.className}>    Book a Parcel Pickup</span>
                     </h2>
                 </div>
                 <div className="border-2 py-6 px-4 border-gray-300 rounded-xl">
@@ -55,7 +56,7 @@ export default function Banner() {
                         <FaLocationDot />
                     </div>
                     <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                        Real Time Tracking
+                        <span className={exo.className}>   Real Time Tracking</span>
                     </h2>
                 </div>
                 <div className="border-2 py-6 px-4 border-gray-300 rounded-xl">
@@ -63,7 +64,7 @@ export default function Banner() {
                         <IoPersonSharp />
                     </div>
                     <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                        Delivery Agent Management
+                        <span className={exo.className}>   Delivery Agent Management</span>
                     </h2>
                 </div>
                 <div className="border-2 py-6 px-4 border-gray-300 rounded-xl">
@@ -71,45 +72,45 @@ export default function Banner() {
                         <FaStackOverflow />
                     </div>
                     <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                        Advanced Analytics & Reports
+                        <span className={exo.className}> Advanced Analytics & Reports</span>
                     </h2>
                 </div>
             </div>
 
             {/* How it Works */}
             <div className="mt-12">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-900 underline mb-6">
-                    How it Works
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-900 mb-6">
+                    <span className={lilita.className}> How it Works</span>
                 </h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="py-6 px-4 rounded-xl bg-white border border-gray-200">
                         <div className="text-xl flex justify-center text-cyan-950">
                             <div className="w-8 h-8 rounded-full bg-cyan-900 text-white flex items-center justify-center">
-                                1
+                                <span className={exo.className}>  1</span>
                             </div>
                         </div>
                         <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                            Create an Account
+                            <span className={exo.className}>Create an Account</span>
                         </h2>
                     </div>
                     <div className="py-6 px-4 rounded-xl bg-white border border-gray-200">
                         <div className="text-xl flex justify-center text-cyan-950">
                             <div className="w-8 h-8 rounded-full bg-cyan-900 text-white flex items-center justify-center">
-                                2
+                                <span className={exo.className}> 2</span>
                             </div>
                         </div>
                         <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                            Book and Assign Parcel
+                            <span className={exo.className}>   Book and Assign Parcel</span>
                         </h2>
                     </div>
                     <div className="py-6 px-4 rounded-xl bg-white border border-gray-200">
                         <div className="text-xl flex justify-center text-cyan-950">
                             <div className="w-8 h-8 rounded-full bg-cyan-900 text-white flex items-center justify-center">
-                                3
+                                <span className={exo.className}>3</span>
                             </div>
                         </div>
                         <h2 className="text-lg text-cyan-800 font-bold text-center mt-3">
-                            Track Deliveries Live
+                            <span className={exo.className}> Track Deliveries Live</span>
                         </h2>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import BookingHistory from "@/components/customer/BookingHistory";
 import Agent from "@/components/customer/Agent";
 import ParcelTracking from "@/components/customer/ParcelTracking";
 import Loader from "@/components/Loader";
+import { guy } from "@/lib/font";
 
 
 export default function customer() {
@@ -54,9 +55,11 @@ export default function customer() {
             <div className="lg:pt-[100px] pt-12 lg:px-5 flex flex-col lg:flex-row justify-center w-full  overflow-hidden">
                 {/* Sidebar */}
                 <div className="lg:w-[20%] bg-cyan-950 p-5">
-                    <h1 className="text-white text-[20px] font-bold text-center mb-4">
-                        Hi <span className="text-cyan-100">{username ? username : "Customer"}</span>
-                    </h1>
+                    <div className={guy.className}>
+                        <h1 className="text-white text-[20px] font-bold text-center mb-4">
+                            Hi <span className="text-cyan-100">{username ? username : "Customer"}</span>
+                        </h1>
+                    </div>
                     <ul className="flex flex-row text-white text-[12px] lg:text-[18px]  lg:flex-col gap-3">
                         <li
                             onClick={() => setActiveTab("dashboard")}
@@ -128,9 +131,10 @@ export default function customer() {
                 <div className="lg:w-[80%] w-full bg-white lg:px-6 py-6">
                     {activeTab === "dashboard" && (
                         <div>
-                            <h2 className="text-xl px-3 font-bold mb-4 text-cyan-700">Welcome  <span className=" text-[20px] font-bold text-center mb-4">
+                            <div className={guy.className}> <h2 className="text-[25px] lg:text-[35px]  px-3 font-bold mb-4 text-cyan-700">Welcome  <span className=" font-bold text-center mb-4">
                                 {username ? username : "Customer"} Book your parcel Now!
                             </span></h2>
+                            </div>
                             <ParcelBooking />
 
                         </div>

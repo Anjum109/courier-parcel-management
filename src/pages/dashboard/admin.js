@@ -6,6 +6,7 @@ import Reports from '@/components/home/navbar/admin/Reports';
 import AllParcel from '@/components/home/navbar/admin/AllParcel';
 import UserManagement from '@/components/home/navbar/admin/UserManagement';
 import Loader from '@/components/Loader';
+import { guy } from '@/lib/font';
 
 
 export default function admin() {
@@ -55,9 +56,11 @@ export default function admin() {
             <div className="lg:pt-[100px] pt-12 lg:px-5 flex flex-col lg:flex-row justify-center w-full  overflow-hidden">
                 {/* Sidebar */}
                 <div className="lg:w-[20%] bg-cyan-900 p-5">
-                    <h1 className="text-white text-[20px] font-bold text-center mb-4">
-                        Hi <span className='text-cyan-100'> {username ? `${username}` : ''}</span>
-                    </h1>
+                    <div className={guy.className}>
+                        <h1 className="text-white text-[30px] font-bold text-center mb-4">
+                            Hi <span className='text-cyan-100'> {username ? `${username}` : ''}</span>
+                        </h1>
+                    </div>
                     <ul className="text-white text-[10px] md:text-[18px] lg:text-[18px] flex flex-row md:flex-col lg:flex-col gap-3">
                         <li
                             onClick={() => setActiveTab('dashboard')}
