@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { alumni, lilita } from '@/lib/font';
+import Navbar from '@/components/home/navbar/Navbar';
 const Loader = dynamic(() => import('../../components/Loader'), { ssr: false });
 export default function LoginPage() {
     const router = useRouter();
@@ -50,58 +51,61 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
-            <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
-                <h2 className="text-[30px] font-bold mb-6 text-center"><span className={lilita.className}>Login</span></h2>
+        <div>
+            <Navbar />
+            <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
+                <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
+                    <h2 className="text-[30px] font-bold mb-6 text-center"><span className={lilita.className}>Login</span></h2>
 
-                {error && <p className="text-red-500 mb-4">{error}</p>}
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
 
-                <form className="space-y-4 text-[20px]" onSubmit={handleLogin}>
-                    <div>
-                        <label className="block mb-1 font-medium"><span className={alumni.className}>Email</span></label>
-                        <input
-                            type="email"
-                            className="w-full border rounded p-2"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
+                    <form className="space-y-4 text-[20px]" onSubmit={handleLogin}>
+                        <div>
+                            <label className="block mb-1 font-medium"><span className={alumni.className}>Email</span></label>
+                            <input
+                                type="email"
+                                className="w-full border rounded p-2"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block mb-1 font-medium"> <span className={alumni.className}>Password </span></label>
-                        <input
-                            type="password"
-                            className="w-full border rounded p-2"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+                        <div>
+                            <label className="block mb-1 font-medium"> <span className={alumni.className}>Password </span></label>
+                            <input
+                                type="password"
+                                className="w-full border rounded p-2"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block mb-1 font-medium"><span className={alumni.className}> Role</span></label>
-                        <select
-                            className="w-full border rounded p-2"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required
+                        <div>
+                            <label className="block mb-1 font-medium"><span className={alumni.className}> Role</span></label>
+                            <select
+                                className="w-full border rounded p-2"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                            >
+                                <option value="">Select a role</option>
+                                <option value="admin">Admin</option>
+                                <option value="delivery">Delivery Agent</option>
+                                <option value="customer">Customer</option>
+                            </select>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full bg-cyan-900 text-white py-2 rounded hover:bg-cyan-700"
                         >
-                            <option value="">Select a role</option>
-                            <option value="admin">Admin</option>
-                            <option value="delivery">Delivery Agent</option>
-                            <option value="customer">Customer</option>
-                        </select>
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-cyan-900 text-white py-2 rounded hover:bg-cyan-700"
-                    >
-                        Login
-                    </button>
-                </form>
-                <p className='text-center mt-3 text-[15px] font-bold'>Dont have an account? <Link href='/login/signup'><span className='text-blue-700 underline'>Signup</span></Link></p>
+                            Login
+                        </button>
+                    </form>
+                    <p className='text-center mt-3 text-[15px] font-bold'>Dont have an account? <Link href='/login/signup'><span className='text-blue-700 underline'>Signup</span></Link></p>
+                </div>
             </div>
         </div>
     );
