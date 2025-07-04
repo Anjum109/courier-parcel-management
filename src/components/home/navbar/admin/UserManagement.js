@@ -114,7 +114,7 @@ export default function UserManagement() {
                                         className="border px-2 py-1 rounded"
                                     >
                                         <option value="customer">Customer</option>
-                                        <option value="delivery">Delivery</option>
+                                        <option value="delivery">Delivery Agent</option>
                                         <option value="admin">Admin</option>
                                     </select>
                                 </td>

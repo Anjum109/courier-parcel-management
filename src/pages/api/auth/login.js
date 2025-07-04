@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         // Set token as HttpOnly cookie
         res.setHeader(
             "Set-Cookie",
-            `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`
+            `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict Secure`
         );
 
         res.status(200).json({
