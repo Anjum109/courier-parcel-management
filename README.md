@@ -1,4 +1,5 @@
 MERN Stack Assignment: Courier and Parcel Management System
+
 🔹 About Project
 I have made a project that includes three roles:
 
@@ -9,6 +10,7 @@ Customer
 Delivery Agent
 
 👤 Customer Panel
+
 When a user signs up or logs in as a Customer, they are redirected to their Dashboard.
 
 From the Parcel Booking section, the customer can book a parcel by entering:
@@ -32,6 +34,7 @@ Customers can also view the delivery agent who is assigned to the parcel by clic
 Before a parcel is assigned to an agent, the customer can cancel or delete the parcel from the list.
 
 🛠️ Admin Dashboard
+
 Admin can view metrics such as:
 
 Total daily bookings
@@ -49,6 +52,7 @@ From there, admin can assign delivery agents to parcels.
 Under User Management, admin can see details of all users and also change user roles — like making someone an admin, delivery agent, or customer.
 
 🚴‍♂️ Delivery Agent Dashboard
+
 When a delivery agent logs in, they can view all assigned parcels.
 
 The agent can send their current location using a button, which is shown on the customer’s tracking screen.
@@ -66,6 +70,7 @@ Failed
 If a delivery is not possible, they can mark it as Canceled.
 
 ⚙️ Technologies Used
+
 Frontend: Next.js
 
 Design: Tailwind CSS
@@ -83,6 +88,7 @@ Real-Time Updates: Socket.IO
 Map Tracking: Google Maps API
 
 📦 Features Implemented Based on Assignment
+
 [✅] Register/Login for all roles
 
 [✅] Role-based access
