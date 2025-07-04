@@ -1,40 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+MERN Stack Assignment: Courier and Parcel Management System
+🔹 About Project
+I have made a project that includes three roles:
 
-## Getting Started
+Admin
 
-First, run the development server:
+Customer
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Delivery Agent
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+👤 Customer Panel
+When a user signs up or logs in as a Customer, they are redirected to their Dashboard.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+From the Parcel Booking section, the customer can book a parcel by entering:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Pickup address
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Delivery address
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Parcel size/type
 
-## Learn More
+Payment method (COD or prepaid)
 
-To learn more about Next.js, take a look at the following resources:
+After submission, a message shows whether the booking is successful or not.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+The customer can go to Booking History to view all parcel bookings and their current status, from Booked to Delivered.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+There is a Track Parcel button, where the current location of the parcel is shown on a map in real-time.
 
-## Deploy on Vercel
+Customers can also view the delivery agent who is assigned to the parcel by clicking Show Agent.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before a parcel is assigned to an agent, the customer can cancel or delete the parcel from the list.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+🛠️ Admin Dashboard
+Admin can view metrics such as:
+
+Total daily bookings
+
+Total COD amount
+
+Failed deliveries count
+
+Admin can download data using Export CSV or Export PDF.
+
+Under All Parcels, admin can see the details of every parcel.
+
+From there, admin can assign delivery agents to parcels.
+
+Under User Management, admin can see details of all users and also change user roles — like making someone an admin, delivery agent, or customer.
+
+🚴‍♂️ Delivery Agent Dashboard
+When a delivery agent logs in, they can view all assigned parcels.
+
+The agent can send their current location using a button, which is shown on the customer’s tracking screen.
+
+The agent can update parcel status like:
+
+Picked Up
+
+In Transit
+
+Delivered
+
+Failed
+
+If a delivery is not possible, they can mark it as Canceled.
+
+⚙️ Technologies Used
+Frontend: Next.js
+
+Design: Tailwind CSS
+
+Icons: React Icons
+
+Backend: Node.js + Express
+
+Database: MongoDB
+
+Authentication: JWT + Cookies
+
+Real-Time Updates: Socket.IO
+
+Map Tracking: Google Maps API
+
+📦 Features Implemented Based on Assignment
+[✅] Register/Login for all roles
+
+[✅] Role-based access
+
+[✅] Parcel booking and management
+
+[✅] Agent assignment
+
+[✅] Parcel status updates
+
+[✅] Real-time tracking via Socket.IO
+
+[✅] Google Maps integration
+
+[✅] Admin metrics dashboard
+
+[✅] CSV/PDF report exports
+
+📝 Deliverables (Done)
+✅ GitHub Repository with code
+
+✅ Hosted Web App (Vercel)
+
+✅ Postman Collection for API testing
+
+✅ PDF Final Report
+
+✅ Video Demo
